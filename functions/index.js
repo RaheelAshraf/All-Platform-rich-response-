@@ -6,6 +6,7 @@ const carousel = require('./intents/carousel');
 const card = require('./intents/card');
 const quickReplies = require('./intents/quickReplies');
 const video = require('./intents/video');
+const image = require('./intents/image');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -41,34 +42,17 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
 
   const imageIntent = () => {
-    let payload = {
-      "fulfillmentMessages": [
-        {
-          "text": {
-            "text": [
-              "showing image from webhook"
-            ]
-          },
-          "platform": PLATFORM
-        },
-        {
-          "image": {
-            "imageUri": "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
-          },
-          "platform": PLATFORM
-        },
-      ]
-    }
-    return response.json(payload);
+    let Response = image.imageFun();
+    return response.json(Response); 
   }
 
-  
+
   const videoIntent = (agent) => {
     if (PLATFORM !== 'FACEBOOK') {
       agent.add(`video response is not available for ${PLATFORM}`);
     }
     else {
-       video.videoFunc(agent); 
+      video.videoFunc(agent);
     }
   }
 
