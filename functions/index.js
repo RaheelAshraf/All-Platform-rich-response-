@@ -23,8 +23,26 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
 
   const welcome = () => {
-    let Response = carousel.cardFun();
-    return response.json(Response);
+
+    const payload = {
+
+      "fulfillmentMessages": [
+        {
+          "quickReplies": {
+            "title": `Hi this is ${PLATFORM} chatbot`,
+            "quickReplies": [
+              "show image",
+              "show carousel",
+              "show card",
+              "show video",
+              "show quick replies"
+            ]
+          },
+          "platform": PLATFORM
+        }
+      ]
+    }
+    return response.json(payload); 
   }
 
   const fallback = (agent) => {
@@ -43,7 +61,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   const imageIntent = () => {
     let Response = image.imageFun();
-    return response.json(Response); 
+    return response.json(Response);
   }
 
 
@@ -56,6 +74,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     }
   }
 
+  const carouselIntent = () => {
+    let Response = carousel.cardFun();
+    return response.json(Response);
+  }
+
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
@@ -63,5 +86,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('button Intent', buttonIntent);
   intentMap.set('image Intent', imageIntent);
   intentMap.set('video Intent', videoIntent);
+  intentMap.set('carousel Intent', carouselIntent);
   _agent.handleRequest(intentMap);
 });
