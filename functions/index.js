@@ -15,8 +15,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
   let PLATFORM = _agent.originalRequest.source;
-  switch (PLATFORM) {
 
+  switch (PLATFORM) {
     case 'facebook':
       PLATFORM = 'FACEBOOK'
       break;
@@ -34,14 +34,21 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       break;
 
   }
+
   exports.PLATFORM = PLATFORM;
 
-
-  const welcome = (agent) => {
-    agent.add(`welcome to my website`)
+  const welcome = () => {
     const payload = {
 
       "fulfillmentMessages": [
+        {
+          "text": {
+            "text": [
+              "WELCOME TO MY WEBSITE"
+            ]
+          },
+          "platform": PLATFORM
+        },
         {
           "quickReplies": {
             "title": `Hi this is website chatbot`,
