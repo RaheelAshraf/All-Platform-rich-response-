@@ -15,21 +15,36 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
   let PLATFORM = _agent.originalRequest.source;
-  PLATFORM = PLATFORM.toUpperCase();
+  switch (PLATFORM) {
+
+    case 'facebook':
+      PLATFORM = 'FACEBOOK'
+      break;
+
+    case 'slack_testbot':
+      PLATFORM = 'SLACK'
+      break
+
+    case 'skype':
+      PLATFORM = 'SKYPE'
+      break;
+
+    case null:
+      PLATFORM = null
+      break;
+
+  }
   exports.PLATFORM = PLATFORM;
 
-  if (PLATFORM === 'SLACK_TESTBOT') {
-    PLATFORM = 'SLACK'
-  }
 
-  const welcome = () => {
-
+  const welcome = (agent) => {
+    agent.add(`welcome to my website`)
     const payload = {
 
       "fulfillmentMessages": [
         {
           "quickReplies": {
-            "title": `Hi this is ${PLATFORM} chatbot`,
+            "title": `Hi this is website chatbot`,
             "quickReplies": [
               "show image",
               "show carousel",
@@ -42,7 +57,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         }
       ]
     }
-    return response.json(payload); 
+    return response.json(payload);
   }
 
   const fallback = (agent) => {
